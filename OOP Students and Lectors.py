@@ -7,7 +7,7 @@ class Student:
         self.finished_courses = []
         self.courses_in_progress = []
         self.grades = {}
-        self.instances.append(self.name + ' ' + self.surname)
+        self.instances.append(self)
 
     #Вспомогательный метод нахождения среднего значения оценки(используется в перегрузке метода __str__)
     def _midl_grades(self):
@@ -17,6 +17,22 @@ class Student:
             all_grades += self.grades[course]
         midl_grade = sum(all_grades) / len(all_grades)
         return midl_grade
+
+    def midl_grades_of_course(course):
+        midl_grade_of_course = 0
+        student_qnt = 0
+        for student in Student.instances:
+            if course in student.grades:
+                midl_grade = sum(student.grades[course]) / len(student.grades[course])
+                midl_grade_of_course += midl_grade
+                student_qnt += 1
+        if student_qnt != 0:
+            return f'''Средняя оценка студентов по курсу {course} {midl_grade_of_course / student_qnt}'''
+        else:
+            return f'''По курсу {course} оценок нет'''
+
+
+
 
     def rate_lect(self, lecturer, course, grade):
         if isinstance(lecturer, Lecturer) and course in lecturer.courses_attached and course in self.courses_in_progress:
@@ -51,7 +67,7 @@ class Lecturer(Mentor):
         self.surname = surname
         self.courses_attached = []
         self.grades = {}
-        self.instances.append(self.name)
+        self.instances.append(self)
 
     #Вспомогательный метод нахождения среднего значения оценки(используется в перегрузке метода __str__)
     def _midl_grades(self):
@@ -65,6 +81,20 @@ class Lecturer(Mentor):
 
     def __str__(self):
         return f'''Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self._midl_grades()}'''
+
+    def midl_grades_of_course(course):
+        midl_grade_of_course = 0
+        lector_qnt = 0
+        for student in Lecturer.instances:
+            if course in student.grades:
+                midl_grade = sum(student.grades[course]) / len(student.grades[course])
+                midl_grade_of_course += midl_grade
+                lector_qnt += 1
+        if lector_qnt != 0:
+            return f'''Средняя оценка лекторов по курсу {course} {midl_grade_of_course / lector_qnt}'''
+        else:
+            return f'''По курсу {course} оценок нет'''
+
 
 
 class Reviewer(Mentor):
@@ -88,11 +118,11 @@ class Reviewer(Mentor):
         return f'''Имя: {self.name}\nФамилия: {self.surname}'''
 
 
-
 best_student = Student('Ruoy', 'Eman', 'your_gender')
 best_student.courses_in_progress += ['Python']
 best_student.courses_in_progress += ['Java']
 best_student.courses_in_progress += ['PHP']
+#best_student.courses_in_progress += ['C++']
 
 new_student = Student('Mark', 'West', 'man')
 new_student.courses_in_progress += ['Python']
@@ -106,8 +136,10 @@ best_reviewer.courses_attached += ['PHP']
 best_lecture = Lecturer('Joe', 'Hasbrow')
 best_lecture.courses_attached += ['Python']
 best_lecture.courses_attached += ['Java']
-#best_lecture.courses_attached += ['PHP']
+#best_lecture.courses_attached += ['C++']
 
+new_lecture = Lecturer('Bob', 'Dillendzher')
+new_lecture.courses_attached += ['Python']
 
 #Выставление оценок студентам
 best_reviewer.rate_hw(best_student, 'Python', 10)
@@ -123,13 +155,12 @@ best_reviewer.rate_hw(new_student, 'Python', 9)
 best_reviewer.rate_hw(new_student, 'Java', 9)
 best_reviewer.rate_hw(new_student, 'Java', 6)
 
-
-
 #Выставление оценок лекторам
 best_student.rate_lect(best_lecture, 'Python', 9)
 best_student.rate_lect(best_lecture, 'Python', 8)
 best_student.rate_lect(best_lecture, 'Python', 10)
 best_student.rate_lect(best_lecture, 'Java', 9)
+best_student.rate_lect(best_lecture, 'Java', 10)
 best_student.rate_lect(best_lecture, 'Java', 10)
 best_student.rate_lect(best_lecture, 'C++', 9)
 
@@ -139,9 +170,10 @@ best_reviewer.end_course(best_student, 'Python')
 #print(best_lecture.grades)
 #best_student._midl_grades()
 
-print(best_student < new_student)
-print(Student.instances)
-
+#print(best_student < new_student)
+#print(Student.instances)
+print(Student.midl_grades_of_course('Python'))
+print(Lecturer.midl_grades_of_course('Python'))
 '''
 print(best_reviewer)
 print('*' * 20)
