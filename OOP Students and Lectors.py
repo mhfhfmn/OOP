@@ -60,7 +60,8 @@ class Student(Man):
         all_grades = []
         courses = self.courses_in_progress + self.finished_courses
         for course in courses:
-            all_grades += self.grades[course]
+            if course in self.grades:
+                all_grades += self.grades[course]
         midl_grade = sum(all_grades) / len(all_grades)
         return midl_grade
 
@@ -121,8 +122,8 @@ class Lecturer(Mentor):
         all_grades = []
         #print(self.courses_attached)
         for course in self.courses_attached:
-            #print(course)
-            all_grades += self.grades[course]
+            if course in self.courses_attached:
+                all_grades += self.grades[course]
         midl_grade = sum(all_grades) / len(all_grades)
         return midl_grade
 
@@ -179,7 +180,7 @@ best_student = Student('Ruoy', 'Eman', 'your_gender')
 best_student.courses_in_progress += ['Python']
 best_student.courses_in_progress += ['Java']
 best_student.courses_in_progress += ['PHP']
-#best_student.courses_in_progress += ['C++']
+best_student.courses_in_progress += ['C++']
 
 new_student = Student('Mark', 'West', 'man')
 new_student.courses_in_progress += ['Python']
@@ -204,6 +205,7 @@ best_reviewer.rate_hw(best_student, 'Python', 10)
 best_reviewer.rate_hw(best_student, 'Python', 10)
 best_reviewer.rate_hw(best_student, 'Java', 8)
 best_reviewer.rate_hw(best_student, 'PHP', 7)
+best_reviewer.rate_hw(best_student, 'PHP', 8)
 
 best_reviewer.rate_hw(new_student, 'Python', 9)
 best_reviewer.rate_hw(new_student, 'Python', 7)
@@ -230,16 +232,18 @@ print(new_student._midl_grades())
 
 print(best_student <= new_student)
 print(best_student >= new_student)
+print(best_student == new_student)
+print(best_student != new_student)
 print('*' * 20)
 
 print(best_lecture._midl_grades())
 print(new_lecture._midl_grades())
 
 print(best_lecture > new_lecture)
-print('*' * 20)
+print(best_lecture < new_lecture)
+print(best_lecture == new_lecture)
+print(best_lecture != new_lecture)
 
-print(Student.midl_grades_of_course('Python'))
-print(Lecturer.midl_grades_of_course('Python'))
 print('*' * 20)
 print(best_student)
 print('*' * 20)
@@ -247,4 +251,5 @@ print(best_reviewer)
 print('*' * 20)
 print(best_lecture)
 print('*' * 20)
-
+print(Student.midl_grades_of_course('Python'))
+print(Lecturer.midl_grades_of_course('Python'))
