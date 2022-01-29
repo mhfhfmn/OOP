@@ -1,4 +1,49 @@
-class Student:
+'''
+Мне стало лень перегружать методы сравнения для каждого класса
+и я решил сделать родительский класс в котором перегружу все необходимые методы
+'''
+class Man:
+
+    def __lt__(self, other):
+        if self._midl_grades() < other._midl_grades():
+            return True
+        else:
+            return False
+
+    def __gt__(self, other):
+        if self._midl_grades() > other._midl_grades():
+            return True
+        else:
+            return False
+
+    def __le__(self, other):
+        if self._midl_grades() <= other._midl_grades():
+            return True
+        else:
+            return False
+
+    def __ge__(self, other):
+        if self._midl_grades() >= other._midl_grades():
+            return True
+        else:
+            return False
+
+    def __eq__(self, other):
+        if self._midl_grades() == other._midl_grades():
+            return True
+        else:
+            return False
+
+    def __ne__(self, other):
+        if self._midl_grades() != other._midl_grades():
+            return True
+        else:
+            return False
+
+
+
+
+class Student(Man):
     instances = []
     def __init__(self, name, surname, gender):
         self.name = name
@@ -10,6 +55,7 @@ class Student:
         self.instances.append(self)
 
     #Вспомогательный метод нахождения среднего значения оценки(используется в перегрузке метода __str__)
+
     def _midl_grades(self):
         all_grades = []
         courses = self.courses_in_progress + self.finished_courses
@@ -31,9 +77,6 @@ class Student:
         else:
             return f'''По курсу {course} оценок нет'''
 
-
-
-
     def rate_lect(self, lecturer, course, grade):
         if isinstance(lecturer, Lecturer) and course in lecturer.courses_attached and course in self.courses_in_progress:
             if course in lecturer.grades:
@@ -44,20 +87,23 @@ class Student:
             return 'Ошибка'
 
     def __str__(self):
-        return f'''Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за домашнее задание: {self._midl_grades()}\nКурсы в процессе изучения: {", ".join(self.courses_in_progress)}\nЗавершенные курсы: {", ".join(self.finished_courses)} '''
+        out = f'''Имя: {self.name}
+Фамилия: {self.surname}
+Средняя оценка за домашнее задание: {self._midl_grades()}
+Курсы в процессе изучения: {", ".join(self.courses_in_progress)}
+Завершенные курсы: {", ".join(self.finished_courses)}'''
+        return out
 
-    def __lt__(self, other):
-        if self._midl_grades() < other._midl_grades():
-            return True
-        else:
-            return False
 
 
-class Mentor:
+
+class Mentor(Man):
     def __init__(self, name, surname):
         self.name = name
         self.surname = surname
         self.courses_attached = []
+
+
 
 
 class Lecturer(Mentor):
@@ -70,6 +116,7 @@ class Lecturer(Mentor):
         self.instances.append(self)
 
     #Вспомогательный метод нахождения среднего значения оценки(используется в перегрузке метода __str__)
+
     def _midl_grades(self):
         all_grades = []
         #print(self.courses_attached)
@@ -80,7 +127,10 @@ class Lecturer(Mentor):
         return midl_grade
 
     def __str__(self):
-        return f'''Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self._midl_grades()}'''
+        out = f'''Имя: {self.name}
+Фамилия: {self.surname}
+Средняя оценка за лекции: {self._midl_grades()}'''
+        return out
 
     def midl_grades_of_course(course):
         midl_grade_of_course = 0
@@ -94,6 +144,7 @@ class Lecturer(Mentor):
             return f'''Средняя оценка лекторов по курсу {course} {midl_grade_of_course / lector_qnt}'''
         else:
             return f'''По курсу {course} оценок нет'''
+
 
 
 
@@ -115,7 +166,13 @@ class Reviewer(Mentor):
             student.finished_courses.append(course)
 
     def __str__(self):
-        return f'''Имя: {self.name}\nФамилия: {self.surname}'''
+        out = f'''Имя: {self.name}
+Фамилия: {self.surname}'''
+        return out
+
+
+
+
 
 
 best_student = Student('Ruoy', 'Eman', 'your_gender')
@@ -136,7 +193,7 @@ best_reviewer.courses_attached += ['PHP']
 best_lecture = Lecturer('Joe', 'Hasbrow')
 best_lecture.courses_attached += ['Python']
 best_lecture.courses_attached += ['Java']
-#best_lecture.courses_attached += ['C++']
+best_lecture.courses_attached += ['C++']
 
 new_lecture = Lecturer('Bob', 'Dillendzher')
 new_lecture.courses_attached += ['Python']
@@ -163,26 +220,31 @@ best_student.rate_lect(best_lecture, 'Java', 9)
 best_student.rate_lect(best_lecture, 'Java', 10)
 best_student.rate_lect(best_lecture, 'Java', 10)
 best_student.rate_lect(best_lecture, 'C++', 9)
+best_student.rate_lect(new_lecture, 'Python', 8)
 
 best_reviewer.end_course(best_student, 'Python')
 
-#print(best_student.grades)
-#print(best_lecture.grades)
-#best_student._midl_grades()
 
-#print(best_student < new_student)
-#print(Student.instances)
+print(best_student._midl_grades())
+print(new_student._midl_grades())
+
+print(best_student <= new_student)
+print(best_student >= new_student)
+print('*' * 20)
+
+print(best_lecture._midl_grades())
+print(new_lecture._midl_grades())
+
+print(best_lecture > new_lecture)
+print('*' * 20)
+
 print(Student.midl_grades_of_course('Python'))
 print(Lecturer.midl_grades_of_course('Python'))
-'''
+print('*' * 20)
+print(best_student)
+print('*' * 20)
 print(best_reviewer)
 print('*' * 20)
 print(best_lecture)
 print('*' * 20)
-print(best_student)
-'''
-'''
-print(best_student.grades)
-print(best_lecture.courses_attached)
-print(best_lecture.grades)
-'''
+
