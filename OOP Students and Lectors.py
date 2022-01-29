@@ -76,7 +76,7 @@ class Student(Man):
         if student_qnt != 0:
             return f'''Средняя оценка студентов по курсу {course} {midl_grade_of_course / student_qnt}'''
         else:
-            return f'''По курсу {course} оценок нет'''
+            return f'''По курсу {course} у студентов оценок нет'''
 
     def rate_lect(self, lecturer, course, grade):
         if isinstance(lecturer, Lecturer) and course in lecturer.courses_attached and course in self.courses_in_progress:
@@ -144,7 +144,7 @@ class Lecturer(Mentor):
         if lector_qnt != 0:
             return f'''Средняя оценка лекторов по курсу {course} {midl_grade_of_course / lector_qnt}'''
         else:
-            return f'''По курсу {course} оценок нет'''
+            return f'''По курсу {course} у лекторов оценок нет'''
 
 
 
@@ -252,4 +252,7 @@ print('*' * 20)
 print(best_lecture)
 print('*' * 20)
 print(Student.midl_grades_of_course('Python'))
+print(Student.midl_grades_of_course('C++'))
 print(Lecturer.midl_grades_of_course('Python'))
+print(Lecturer.midl_grades_of_course('C++'))
+print(Lecturer.midl_grades_of_course('C#'))
